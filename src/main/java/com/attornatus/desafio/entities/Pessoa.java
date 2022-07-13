@@ -3,15 +3,20 @@ package com.attornatus.desafio.entities;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "tb_pessoa")
 public class Pessoa implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -21,7 +26,11 @@ public class Pessoa implements Serializable {
 	private String nome;
 	private Date dataDeNascimento;
 	
-	Pessoa(){
+	
+	@OneToMany(mappedBy = "morador")
+	private List<Endereco> enderecos = new ArrayList<>();
+	
+	public Pessoa(){
 	}
 
 	public Pessoa(Long id, String nome, String dataDeNascimento) throws ParseException {
@@ -57,6 +66,10 @@ public class Pessoa implements Serializable {
 		this.dataDeNascimento = data;
 	}
 
+	public List<Endereco> getEnderecos() {
+		return enderecos;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id, nome);
@@ -73,6 +86,8 @@ public class Pessoa implements Serializable {
 		Pessoa other = (Pessoa) obj;
 		return Objects.equals(id, other.id) && Objects.equals(nome, other.nome);
 	}
+
+
 	
 	
 }
