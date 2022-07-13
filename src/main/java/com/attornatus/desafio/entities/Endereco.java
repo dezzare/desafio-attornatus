@@ -1,6 +1,7 @@
 package com.attornatus.desafio.entities;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Entity;
@@ -31,11 +32,12 @@ public class Endereco implements Serializable{
 	private Integer	numero;
 	private String cidade;
 	private Integer cep;
+	private Boolean principal;
 	
 	public Endereco() {
 	}
 
-	public Endereco(Long id, Pessoa morador, String logradouro, Integer numero, String cidade, Integer cep) {
+	public Endereco(Long id, Pessoa morador, String logradouro, Integer numero, String cidade, Integer cep, Boolean principal) {
 		super();
 		this.id = id;
 		this.morador = morador;
@@ -43,6 +45,7 @@ public class Endereco implements Serializable{
 		this.numero = numero;
 		this.cidade = cidade;
 		this.cep = cep;
+		setPrincipal(principal);
 	}
 
 	public Long getId() {
@@ -93,6 +96,20 @@ public class Endereco implements Serializable{
 		this.cep = cep;
 	}
 
+	public Boolean getPrincipal() {
+		return this.principal;
+	}
+
+	public void setPrincipal(Boolean principal) {
+		List<Endereco> enderecos = this.morador.getEnderecos();
+		if (principal) {
+			enderecos.stream().forEach((x) -> x.principal = false);
+			this.principal = true;
+		} else {
+			this.principal = false;
+		}
+	}
+		
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
