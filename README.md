@@ -2,8 +2,12 @@
 
 Este projeto é parte do processo seletivo da Attornatus.
 
+
 Além do proposto, fiz o deploy no Heroku utilizando PostgreSQL.
   https://desafio-attornatus.herokuapp.com/
+
+O arquivo Insomnia_route_test pode ser usado para testar diretamente as rotas.
+
 
 
 ## Avaliação Desenvolvedor Back-end Attornatus
