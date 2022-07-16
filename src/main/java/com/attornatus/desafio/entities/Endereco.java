@@ -2,7 +2,6 @@ package com.attornatus.desafio.entities;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,28 +22,27 @@ public class Endereco implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name = "pessoa_id")
-	private Pessoa morador;
-	
 	private String logradouro;
 	private Integer	numero;
 	private String cidade;
 	private Integer cep;
 	private Boolean principal;
 	
-	public Endereco() {
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = "morador_id")
+	private Pessoa morador;
+	
+	public Endereco(){		
 	}
-
-	public Endereco(Long id, Pessoa morador, String logradouro, Integer numero, String cidade, Integer cep, Boolean principal) {
-		super();
+	
+	public Endereco(Long id, String logradouro, Integer numero, String cidade, Integer cep, Boolean principal, Pessoa morador) {
 		this.id = id;
-		this.morador = morador;
 		this.logradouro = logradouro;
 		this.numero = numero;
 		this.cidade = cidade;
 		this.cep = cep;
+		this.morador = morador;
 		setPrincipal(principal);
 	}
 
@@ -108,24 +106,5 @@ public class Endereco implements Serializable{
 		} else {
 			this.principal = false;
 		}
-	}
-		
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Endereco other = (Endereco) obj;
-		return Objects.equals(id, other.id);
-	}
-	
-	
+	}		
 }

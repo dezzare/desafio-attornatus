@@ -28,9 +28,9 @@ public class TestConfig implements CommandLineRunner{
 		Pessoa p1 = new Pessoa(null, "Pedro", "01/01/2001");
 		Pessoa p2 = new Pessoa(null, "João", "02/02/2002");
 		
-		Endereco e1 = new Endereco(null, p1, "rua UM", 11, "Cidade1", 11111111, true);
-		Endereco e2 = new Endereco(null, p2, "rua DOIS", 22, "Cidade1", 22222222, false);
-		Endereco e3 = new Endereco(null, p2, "rua TRÊS", 33, "Cidade2", 32222223, true);
+		Endereco e1 = new Endereco(null, "rua UM", 11, "Cidade1", 11111111, true, p1);
+		Endereco e2 = new Endereco(null, "rua DOIS", 22, "Cidade1", 22222222, false, p2);
+		Endereco e3 = new Endereco(null, "rua TRÊS", 33, "Cidade2", 32222223, true, p2);
 			
 		pessoaRepository.saveAll(Arrays.asList(p1, p2));
 		enderecoRepository.saveAll(Arrays.asList(e1, e2, e3));
