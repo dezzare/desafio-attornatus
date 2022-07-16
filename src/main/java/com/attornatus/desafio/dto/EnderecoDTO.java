@@ -2,10 +2,17 @@ package com.attornatus.desafio.dto;
 
 import java.io.Serializable;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.attornatus.desafio.entities.Endereco;
+import com.attornatus.desafio.entities.Pessoa;
+import com.attornatus.desafio.repositories.PessoaRepository;
 
 public class EnderecoDTO implements Serializable{
 
+	@Autowired
+	private PessoaRepository pRepository;
+	
 	private static final long serialVersionUID = 1L;
 	
 	
@@ -50,6 +57,13 @@ public class EnderecoDTO implements Serializable{
 
 	public Long getMorador() {
 		return moradorId;
+	}
+	
+	public Pessoa getMoradorPessoa(Long id) {
+		@SuppressWarnings("deprecation")
+		
+		Pessoa entity = pRepository.getOne(id);
+		return entity;
 	}
 
 	public void setMorador(Long morador) {

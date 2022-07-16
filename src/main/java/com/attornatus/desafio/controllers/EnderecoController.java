@@ -69,8 +69,8 @@ public class EnderecoController {
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Endereco> update(@PathVariable Long id, @RequestBody Endereco obj) throws ParseException{
-		obj = service.update(id,  obj);
+	public ResponseEntity<Endereco> update(@PathVariable Long id, @RequestBody EnderecoDTO objDTO) throws ParseException{
+		Endereco obj = service.update(id, objDTO);
 		return ResponseEntity.ok().body(obj);
 	}
 	

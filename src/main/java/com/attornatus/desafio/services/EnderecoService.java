@@ -1,6 +1,5 @@
 package com.attornatus.desafio.services;
 
-
 import java.text.ParseException;
 import java.util.Optional;
 
@@ -24,74 +23,85 @@ import com.attornatus.desafio.services.exceptions.ResourceNotFoundException;
 @Service
 public class EnderecoService {
 
-	@Autowired
-	private EnderecoRepository repository;
+  @Autowired
+  private EnderecoRepository repository;
+
+  // public List<Endereco> findAll() {
+  // return repository.findAll();
+  // }
+  //
+  public Endereco findById(Long id) {
+    Optional<Endereco> obj = repository.findById(id);
+    return obj.get();
+  }
+
+  // public Endereco insert(Endereco obj) {
+  //
+  // return repository.save(obj);
+  // }
+
+  public void delete(Long id) {
+    try {
+      repository.deleteById(id);
+    } catch (EmptyResultDataAccessException error) {
+      throw new ResourceNotFoundException(id);
+    } catch (DataIntegrityViolationException error) {
+      throw new DataBaseException(error.getMessage());
+    }
+  }
 
 
-//	public List<Endereco> findAll() {
-//		return repository.findAll();
-//	}
-//	
-	public Endereco findById(Long id) {
-		Optional<Endereco> obj = repository.findById(id);
-		return obj.get();
-	}
+  public Endereco update(Long id, EnderecoDTO objDTO) throws ParseException {
+    Long moradorId = objDTO.getMorador();
+    Endereco novoObj = new Endereco(
+        objDTO.getId(),
+        objDTO.getLogradouro(),
+        objDTO.getNumero(),
+        objDTO.getCidade(),
+        objDTO.getCep(),
+        objDTO.getPrincipal(),
+        new Pessoa(moradorId, null, null));
+  
 
-	
-//	public Endereco insert(Endereco obj) {
-//	
-//		return repository.save(obj);
-//	}
+    try {
+      @SuppressWarnings("deprecation")
+      Endereco entity = repository.getOne(id);
+      updateSource(entity, novoObj);
+      return repository.save(entity);
+    } catch (EntityNotFoundException error) {
+      throw new ResourceNotFoundException(id);
+    }
+  }
 
-	public void delete(Long id) {
-		try {
-			repository.deleteById(id);
-		} catch (EmptyResultDataAccessException error) {
-			throw new ResourceNotFoundException(id);
-		} catch (DataIntegrityViolationException error) {
-			throw new DataBaseException(error.getMessage());
-		}
-	}
+  private void updateSource(Endereco entity, Endereco obj) throws ParseException {
 
-	@SuppressWarnings("deprecation")
-	public Endereco update(Long id, Endereco obj) throws ParseException {
-		try {
-			Endereco entity = repository.getOne(id);
-			updateSource(entity, obj);
-			return repository.save(entity);
-		} catch (EntityNotFoundException error) {
-			throw new ResourceNotFoundException(id);
-		}
-	}
+    entity.setMorador(obj.getMorador());
+    entity.setLogradouro(obj.getLogradouro());
+    entity.setNumero(obj.getNumero());
+    entity.setCidade(obj.getCidade());
+    entity.setCep(obj.getCep());
+    entity.setPrincipal(obj.getPrincipal());
+  }
 
-	private void updateSource(Endereco entity, Endereco obj) throws ParseException {
-		entity.setMorador(obj.getMorador());
-		entity.setLogradouro(obj.getLogradouro());
-		entity.setNumero(obj.getNumero());
-		entity.setCidade(obj.getCidade());
-		entity.setCep(obj.getCep());		
-		entity.setPrincipal(obj.getPrincipal());		
-	}
-	
-	@Transactional(readOnly = true)
-	public Page<EnderecoDTO> findAll(Pageable pageable) {
-		Page<Endereco> page = repository.findAll(pageable);
-		return page.map(x -> new EnderecoDTO(x));
-	}
-	
-	@Transactional
-	public EnderecoDTO insert(EnderecoDTO dto) {
-		Endereco entity = new Endereco();
-		entity.setMorador(new Pessoa(dto.getMorador(), null, null));
-		entity.setLogradouro(dto.getLogradouro());
-		entity.setNumero(dto.getNumero());
-		entity.setCidade(dto.getCidade());
-		entity.setCep(dto.getCep());
-		entity.setPrincipal(dto.getPrincipal());
-					
-		entity = repository.save(entity);
-				
-		return new EnderecoDTO(entity);
-	}
-	
+  @Transactional(readOnly = true)
+  public Page<EnderecoDTO> findAll(Pageable pageable) {
+    Page<Endereco> page = repository.findAll(pageable);
+    return page.map(x -> new EnderecoDTO(x));
+  }
+
+  @Transactional
+  public EnderecoDTO insert(EnderecoDTO dto) {
+    Endereco entity = new Endereco();
+    entity.setMorador(new Pessoa(dto.getMorador(), null, null));
+    entity.setLogradouro(dto.getLogradouro());
+    entity.setNumero(dto.getNumero());
+    entity.setCidade(dto.getCidade());
+    entity.setCep(dto.getCep());
+    entity.setPrincipal(dto.getPrincipal());
+
+    entity = repository.save(entity);
+
+    return new EnderecoDTO(entity);
+  }
+
 }
